@@ -9,7 +9,7 @@ default: help
 
 start: ##@setup remove containers
 	docker network create monitoring || true
-	docker-compose up -d
+	docker compose up -d
 .PHONY: start
 
 down: ##@setup remove containers
@@ -17,7 +17,7 @@ down: ##@setup remove containers
 .PHONY: down
 
 stop: ##@setup stop containers
-	docker-compose stop
+	docker compose stop
 .PHONY: stop
 
 # Add the following 'help' target to your Makefile
