@@ -13,7 +13,7 @@ start: ##@setup remove containers
 .PHONY: start
 
 down: ##@setup remove containers
-	docker-compose down
+	docker compose down
 .PHONY: down
 
 stop: ##@setup stop containers

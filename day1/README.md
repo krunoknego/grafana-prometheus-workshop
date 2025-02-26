@@ -2,16 +2,16 @@
 
 ## Excercise 1
 
-Task: Star the docker containers
+Task: Start the docker containers
 
 1. Execute `make start` to start the docker containers.
 
 Task: Connect prometheus to grafana
 
-1. Log in to Grafana (default username: admin, password: admin).
-2. Go to Configuration > Data Sources.
+1. Log in to Grafana `http://localhost:3000` (default username: admin, password: admin).
+2. Go to Connections > Data Sources.
 3. Click "Add data source" and select Prometheus.
-4. Set the URL to http://prometheus:9090.
+4. Set the URL to `http://prometheus:9090`.
 5. Click "Save & Test" to verify the connection.
 
 Task: Write a PromQL query in Grafana to visualze how fast the CPU time is accumulating
@@ -19,7 +19,7 @@ Task: Write a PromQL query in Grafana to visualze how fast the CPU time is accum
 1. Go to Dashboards
 2. Create Dashboard > Add visualization
 3. Select Prometheus
-4. Write the PromQL query below
+4. Write the PromQL query below (Builder and Code, you need to select the Code tab to write the query)
 
 ```sh
 rate(process_cpu_seconds_total[1m])
@@ -32,7 +32,7 @@ Task: install `node_exporter` and connect it to Prometheus
 1. Go to the `docker-compose.yaml` 
 2. Uncomment the `node_exporter` service and execute `make down start`
 3. Go to `http://localhost:9100/metrics` to verify that the metrics are being exposed (check TYPE and HELP)
-4. Go to `http://localhost:9090/targets` to check which targets are being scraped
+4. Go to `http://localhost:9090/targets` to check which targets are being scraped (notice that there is only one target `prometheus`)
 5. Update prometheus configuration `prometheus.yml` to scrape the `node_exporter` service and execute `make down start`
 
 ``` yaml

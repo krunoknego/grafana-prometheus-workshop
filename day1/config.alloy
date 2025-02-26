@@ -1,37 +1,4 @@
-prometheus.exporter.unix "local_system" { }
-
-prometheus.scrape "scrape_metrics" {
-  targets         = prometheus.exporter.unix.local_system.targets
-  forward_to      = [prometheus.relabel.filter_metrics.receiver]
-  scrape_interval = "10s"
-}
-
-prometheus.relabel "filter_metrics" {
-  rule {
-    action        = "drop"
-    source_labels = ["env"]
-    regex         = "dev"
-  }
-
-  forward_to = [prometheus.remote_write.metrics_service.receiver]
-}
-
-prometheus.remote_write "metrics_service" {
-    endpoint {
-        url = "http://prometheus:9090/api/v1/write"
-
-        basic_auth {
-          username = "admin"
-          password = "admin"
-        }
-    }
-}
-
-prometheus.scrape "node_exporter" {
-  // Collect metrics from the default listen address.
-  targets = [{
-    __address__ = "node-exporter:9100",
-  }]
-
-  forward_to = [prometheus.relabel.filter_metrics.receiver]
+logging {
+  level  = "info"
+  format = "logfmt"
 }
