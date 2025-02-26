@@ -1,0 +1,48 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    # TODO uncomment this for Exercise 3
+    # command:
+    #   - '--config.file=/etc/prometheus/prometheus.yml'
+    #   - '--web.enable-remote-write-receiver'
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
+
+  # TODO uncomment this for Exercise 2
+  # node-exporter:
+  #   image: prom/node-exporter
+  #   ports:
+  #     - 9100:9100
+  #   networks:
+  #     - monitoring
+
+  # TODO uncomment this for Exercise 3
+  # grafana-alloy:
+  #   image: grafana/alloy
+  #   ports:
+  #     - 12345:12345
+  #   volumes:
+  #     - ./config.alloy:/etc/alloy/config.alloy
+  #   command:
+  #     - run
+  #     - --server.http.listen-addr=0.0.0.0:12345
+  #     - /etc/alloy/config.alloy
+  #   networks:
+  #     - monitoring
+
+networks:
+  monitoring:
+    external: true
