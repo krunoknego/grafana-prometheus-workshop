@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+  external_labels:
+    cluster: prom3
+
+scrape_configs:
+  - job_name: 'prometheus3'
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'sidecar3'
+    static_configs:
+      - targets: ['sidecar3:19092']

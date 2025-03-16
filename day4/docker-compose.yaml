@@ -1,0 +1,117 @@
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    network_mode: host
+    restart: always
+
+#   prometheus1:
+#     image: prom/prometheus:latest
+#     volumes:
+#       - ./prometheus1.yml:/etc/prometheus/prometheus.yml
+#     ports:
+#       - "9091:9090"
+#     command:
+#       - '--config.file=/etc/prometheus/prometheus.yml'
+#       - '--web.enable-admin-api'
+#       - '--web.enable-lifecycle'
+#     networks:
+#       - monitoring
+
+#   sidecar1:
+#     image: thanosio/thanos:v0.25.0
+#     depends_on:
+#       - prometheus1
+#     volumes:
+#       - ./prometheus1.yml:/etc/prometheus/prometheus.yml
+#     command:
+#       - sidecar
+#       - --prometheus.url=http://prometheus1:9090
+#       - --tsdb.path=/prometheus
+#       - --grpc-address=0.0.0.0:19190
+#       - --reloader.config-file=/etc/prometheus/prometheus.yml
+#       - --http-address=0.0.0.0:19092
+#     networks:
+#       - monitoring
+
+#   prometheus2:
+#     image: prom/prometheus:latest
+#     volumes:
+#       - ./prometheus2.yml:/etc/prometheus/prometheus.yml
+#     ports:
+#       - "9092:9090"
+#     command:
+#       - '--config.file=/etc/prometheus/prometheus.yml'
+#       - '--web.enable-admin-api'
+#       - '--web.enable-lifecycle'
+#     networks:
+#       - monitoring
+
+#   sidecar2:
+#     image: thanosio/thanos:v0.25.0
+#     depends_on:
+#       - prometheus2
+#     volumes:
+#       - ./prometheus2.yml:/etc/prometheus/prometheus.yml
+#     command:
+#       - sidecar
+#       - --prometheus.url=http://prometheus2:9090
+#       - --tsdb.path=/prometheus
+#       - --grpc-address=0.0.0.0:19190
+#       - --reloader.config-file=/etc/prometheus/prometheus.yml
+#       - --http-address=0.0.0.0:19092
+#     networks:
+#       - monitoring
+
+#   prometheus3:
+#     image: prom/prometheus:latest
+#     volumes:
+#       - ./prometheus3.yml:/etc/prometheus/prometheus.yml
+#     ports:
+#       - "9093:9090"
+#     command:
+#       - '--config.file=/etc/prometheus/prometheus.yml'
+#       - '--web.enable-admin-api'
+#       - '--web.enable-lifecycle'
+#     networks:
+#       - monitoring
+
+#   sidecar3:
+#     image: thanosio/thanos:v0.25.0
+#     depends_on:
+#       - prometheus3
+#     volumes:
+#       - ./prometheus3.yml:/etc/prometheus/prometheus.yml
+#     command:
+#       - sidecar
+#       - --prometheus.url=http://prometheus3:9090
+#       - --tsdb.path=/prometheus
+#       - --grpc-address=0.0.0.0:19190
+#       - --reloader.config-file=/etc/prometheus/prometheus.yml
+#       - --http-address=0.0.0.0:19092
+#     networks:
+#       - monitoring
+
+#   thanos-query:
+#     image: thanosio/thanos:v0.25.0
+#     depends_on:
+#       - sidecar1
+#       - sidecar2
+#       - sidecar3
+#     command:
+#       - query
+#       - --http-address=:9090
+#       - --store=sidecar1:19190
+#       - --store=sidecar2:19190
+#       - --store=sidecar3:19190
+#     ports:
+#       - "9090:9090"
+#     networks:
+#       - monitoring
+
+# networks:
+#   monitoring:
+#     driver: bridge
