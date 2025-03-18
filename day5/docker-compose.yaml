@@ -1,0 +1,91 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus_server.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
+
+  prometheus-agent:
+    image: prom/prometheus:latest
+    container_name: prometheus-agent
+    volumes:
+      - ./prometheus_agent.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - node-exporter
+    command:
+      - "--enable-feature=agent"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+
+  telegraf-client1:
+    image: telegraf:latest
+    container_name: telegraf-client1
+    volumes:
+      - ./telegraf_client.conf:/etc/telegraf/telegraf.conf:ro
+    environment:
+      - HOSTNAME=telegraf-client1
+
+  telegraf-client2:
+    image: telegraf:latest
+    container_name: telegraf-client2
+    volumes:
+      - ./telegraf_client.conf:/etc/telegraf/telegraf.conf:ro
+    environment:
+      - HOSTNAME=telegraf-client2
+
+  telegraf-aggregator:
+    image: telegraf:latest
+    container_name: telegraf-aggregator
+    volumes:
+      - ./telegraf_aggregator.conf:/etc/telegraf/telegraf.conf:ro
+    ports:
+      - "9273:9273"
+    depends_on:
+      - telegraf-client1
+      - telegraf-client2
+
+  go-app1:
+    build: ./go-app1
+    container_name: go-app1
+    ports:
+      - "8081:8080"
+
+  go-app2:
+    build: ./go-app2
+    container_name: go-app2
+    ports:
+      - "8082:8080"
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+
+  go-json:
+    build: ./go-json
+    container_name: go-json
+    ports:
+      - "8083:8080"
+
+  json_exporter:
+    image: prometheuscommunity/json-exporter:latest
+    container_name: json_exporter
+    command:
+      - "--config.file=/etc/json_exporter/config.yml"
+    ports:
+      - "7979:7979"
+    volumes:
+      - ./json_exporter.yml:/etc/json_exporter/config.yml:ro
